@@ -1,0 +1,15 @@
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\Assignment3.GeneratedMSBuildEditorConfig.editorconfig
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\Assignment3.AssemblyInfoInputs.cache
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\Assignment3.AssemblyInfo.cs
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\Assignment3.csproj.CoreCompileInputs.cache
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\Assignment3.sourcelink.json
+D:\CPSC1012\Github\CPSC1012-Assignment3\bin\Debug\net8.0\Assignment3.exe
+D:\CPSC1012\Github\CPSC1012-Assignment3\bin\Debug\net8.0\Assignment3.deps.json
+D:\CPSC1012\Github\CPSC1012-Assignment3\bin\Debug\net8.0\Assignment3.runtimeconfig.json
+D:\CPSC1012\Github\CPSC1012-Assignment3\bin\Debug\net8.0\Assignment3.dll
+D:\CPSC1012\Github\CPSC1012-Assignment3\bin\Debug\net8.0\Assignment3.pdb
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\Assignment3.dll
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\refint\Assignment3.dll
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\Assignment3.pdb
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\Assignment3.genruntimeconfig.cache
+D:\CPSC1012\Github\CPSC1012-Assignment3\obj\Debug\net8.0\ref\Assignment3.dll
