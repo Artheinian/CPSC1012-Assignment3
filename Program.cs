@@ -36,7 +36,7 @@ while (displayMainMenu)
 			if (proceed)
 			{
 				// TODO: uncomment the following and call the EnterSalesEntries method below
-				//count = CALL THE METHOD HERE
+				count = EnterSalesEntries(sales, dates);
 				Console.WriteLine();
 				Console.WriteLine($"Entries completed. {count} records in temporary memory.");
 				Console.WriteLine();
@@ -184,16 +184,17 @@ static bool NewEntryDisclaimer()
 	return response;
 }
 
-// static void EnterSalesEntries(double[] sales, string[] dates) 
-// {
-//      Console.WriteLine("Enter daily sales entries for the month:");
-//     for (int i = 0; i < sales.Length; i++)
-//     {
-//         Console.WriteLine($"Day {i + 1}:");
-//         sales[i] = PromptDouble("Enter sales amount: ");
-//         dates[i] = Prompt($"Enter date for day {i + 1}: ");
-//     }
-// }
+static int EnterSalesEntries(double[] sales, string[] dates) 
+{
+     Console.WriteLine("Enter daily sales entries for the month:");
+    for (int i = 0; i < sales.Length; i++)
+    {
+        Console.WriteLine($"Day {i + 1}:");
+        sales[i] = PromptDouble("Enter sales amount: ");
+        dates[i] = Prompt($"Enter date for day {i + 1}: ");
+    }
+    return sales.Length;
+}
 
 static string Prompt(string prompt)
 {   
