@@ -5,10 +5,10 @@ bool displayMainMenu = true;
 bool displayAnalysisMenu = false;
 bool quit = false ;
 
-int salesdateMax = 31;
+ int salesdateMax = 31;
 
-double[] sales = new double[salesdateMax];
-string[] dates = new string[salesdateMax];
+ double[] sales = new double[salesdateMax];
+ string[] dates = new string[salesdateMax];
 
 string month;
 string year;
@@ -46,14 +46,22 @@ while (displayMainMenu)
 				Console.WriteLine("Cancelling new data entry. Returning to MAIN MENU.");
 			}
         }
+        else if (mainMenuChoice == "S")
+         {
+            Console.WriteLine("You picked S");
+              }
+        else if (mainMenuChoice == "E")
+         {
+            Console.WriteLine("You picked E");
+              }
         else if (mainMenuChoice == "L")
          {
             Console.WriteLine("You picked L");
-              }
-        else if (mainMenuChoice == "D")
+              }            
+        else if (mainMenuChoice == "V")
          {
-            DisplayMainMenu();
-              }
+            Console.WriteLine("You picked V");
+              }      
         else if (mainMenuChoice == "M")
             {
             displayAnalysisMenu = true;
@@ -94,6 +102,10 @@ while (displayMainMenu)
                                 }
                 }
             }
+        else if (mainMenuChoice == "D")
+         {
+            DisplayMainMenu();
+              }
         else if (mainMenuChoice == "Q")
         {
             quit = Prompt("Are you sure you want to quit (y/N)? ").ToLower().Equals("y");
@@ -114,28 +126,6 @@ while (displayMainMenu)
         Console.WriteLine($"{ex.Message}");
     }
 }
-    // switch (mainMenuChoice)
-    // {
-    //     case "N":
-
-    //         Console.WriteLine("You picked N");
-    //         break;
-    //     case "Q": //[Q]uit Program
-    //         quit = Prompt("Are you sure you want to quit (y/N)? ").ToLower().Equals("y");
-    //         Console.WriteLine();
-    //         if (quit)
-    //         {
-    //             displayMainMenu = false;
-    //         }
-    //         break;
-    //     default: //invalid entry. Reprompt.
-    //         Console.WriteLine("Invalid reponse. Enter one of the letters to choose a menu option.");
-    //         break;
-    // }
-    
-
-
-
 
 void DisplayMainMenu()
 {
@@ -243,6 +233,23 @@ static int PromptInt(String msg)
     }
   }
   return numInt;
+}
+
+createFile();
+
+void createFile(){
+   try
+  {
+    const string fileName = "Sample.dat"; 
+    string[] csvLines = new string[salesdateMax];
+    csvLines[0] = "Data, Amount";
+    File.WriteAllLines(fileName, csvLines);
+    Console.WriteLine($"Data successfully written to file at: {Path.GetFullPath(fileName)}");
+  }
+  catch (Exception ex)
+  {
+    Console.WriteLine($"Exception in demo1: {ex.Message}");
+  }
 }
 
 
