@@ -12,7 +12,7 @@ bool quit = false ;
 
 string month;
 string year;
-string filename;
+string filename = "";
 int count = 0;
 bool proceed;
 double mean;
@@ -48,8 +48,26 @@ while (displayMainMenu)
         }
         else if (mainMenuChoice == "S")
          {
-            Console.WriteLine("You picked S");
+            if (count == 0)
+            {
+              Console.WriteLine("Sorry, LOAD data or enter NEW data before SAVING.");
+            }
+            else
+            {
+              proceed = SaveEntryDisclaimer();
+
+              if (proceed)
+              {
+                filename = PromptForFilename();
+                SaveSalesFile(filename, sales, dates);
+
               }
+              else
+              {
+                Console.WriteLine("Cancelling save operation. Returning to MAIN MENU.");
+              }
+            }
+         }
         else if (mainMenuChoice == "E")
          {
             Console.WriteLine("You picked E");
@@ -174,16 +192,41 @@ static bool NewEntryDisclaimer()
 	return response;
 }
 
-static int EnterSalesEntries(double[] sales, string[] dates) 
+static bool SaveEntryDisclaimer()
+{
+	bool response;
+	Console.WriteLine("Disclaimer: saving to an EXISTING file will overwrite data currently on that file.");
+	Console.WriteLine("Hint: Files will be saved to this program's directory by default.");
+	Console.WriteLine("Hint: If the file does not yet exist, it will be created.");
+	Console.WriteLine();
+	response = Prompt("Do you wish to proceed anyway? (y/N) ").ToLower().Equals("y");
+	Console.WriteLine();
+	return response;
+}
+
+int EnterSalesEntries(double[] sales, string[] dates) 
 {
      Console.WriteLine("Enter daily sales entries for the month:");
     for (int i = 0; i < sales.Length; i++)
     {
         Console.WriteLine($"Day {i + 1}:");
         sales[i] = PromptDouble("Enter sales amount: ");
-        dates[i] = Prompt($"Enter date for day {i + 1}: ");
+        dates[i] = Prompt($"Enter date for day {i + 1}:  ");
     }
     return sales.Length;
+}
+
+void SaveSalesFile(string filename, double[] sales, string[] dates)
+{
+    
+    string[] csvLines = new string[salesdateMax];
+    csvLines[0] = "Data, Amount";
+    for (int n = 1; n < sales.Length; n++)
+    {
+      csvLines[n] = $"{sales[n]} + {dates[n]}";
+    }
+    File.WriteAllLines(filename, csvLines);
+    Console.WriteLine($"Data successfully written to file at: {Path.GetFullPath(filename)}");
 }
 
 static string Prompt(string prompt)
@@ -235,9 +278,10 @@ static int PromptInt(String msg)
   return numInt;
 }
 
-createFile();
 
-void createFile(){
+
+void createFile()
+{
    try
   {
     const string fileName = "Sample.dat"; 
@@ -250,6 +294,38 @@ void createFile(){
   {
     Console.WriteLine($"Exception in demo1: {ex.Message}");
   }
+}
+
+string PromptForFilename()
+{
+	bool isValidFilename = true;
+	const string CsvFileExtension = ".csv";
+	const string TxtFileExtension = ".txt";
+
+	do
+	{
+		filename = Prompt("Enter name of .csv or .txt file to save to (e.g. JAN-2024-sales.csv): ");
+		if (filename == "")
+		{
+			isValidFilename = false;
+			Console.WriteLine("Please try again. The filename cannot be blank or just spaces.");
+		}
+		else
+		{
+			if (!filename.EndsWith(CsvFileExtension) && !filename.EndsWith(TxtFileExtension)) //if filename does not end with .txt or .csv.
+			{
+				filename = filename + CsvFileExtension; //append .csv to filename
+				Console.WriteLine("It looks like your filename does not end in .csv or .txt, so it will be treated as a .csv file.");
+				isValidFilename = true;
+			}
+			else
+			{
+				Console.WriteLine("It looks like your filename ends in .csv or .txt, which is good!");
+				isValidFilename = true;
+			}
+		}
+	} while (!isValidFilename);
+	return filename;
 }
 
 
