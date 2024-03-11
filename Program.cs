@@ -1,334 +1,212 @@
-﻿// See https://aka.ms/new-console-template for more information
-string mainMenuChoice;
-string analysisMenuChoice;
-bool displayMainMenu = true;
-bool displayAnalysisMenu = false;
-bool quit = false ;
+﻿
+// TODO: declare a constant to represent the max size of the values
+// and dates arrays. The arrays must be large enough to store
+// values for an entire month.
+int physicalSize = 31;
+int logicalSize = 0;
 
- int salesdateMax = 31;
+// TODO: create a double array named 'values', use the max size constant you declared
+// above to specify the physical size of the array.
+double[] values = new double[physicalSize];
 
- double[] sales = new double[salesdateMax];
- string[] dates = new string[salesdateMax];
+// TODO: create a string array named 'dates', use the max size constant you declared
+// above to specify the physical size of the array.
+string[] dates = new string[physicalSize];
 
-string month;
-string year;
-string filename = "";
-int count = 0;
-bool proceed;
-double mean;
-double largest;
-double smallest;
-
-DisplayProgramIntro();
-
-DisplayMainMenu();
-
-while (displayMainMenu)
-{
+bool goAgain = true;
+  while (goAgain)
+  {
     try
     {
-        mainMenuChoice = Prompt("Enter MAIN MENU option ('D' to display menu): ").ToUpper();
-        Console.WriteLine();
-        if (mainMenuChoice == "N")
+      DisplayMainMenu();
+      string mainMenuChoice = Prompt("\nEnter a Main Menu Choice: ").ToUpper();
+      if (mainMenuChoice == "L")
+        logicalSize = LoadFileValuesToMemory(dates, values);
+      if (mainMenuChoice == "S")
+        SaveMemoryValuesToFile(dates, values, logicalSize);
+      if (mainMenuChoice == "D")
+        DisplayMemoryValues(dates, values, logicalSize);
+      if (mainMenuChoice == "A")
+        logicalSize = AddMemoryValues(dates, values, logicalSize);
+      if (mainMenuChoice == "E")
+        EditMemoryValues(dates, values, logicalSize);
+      if (mainMenuChoice == "Q")
+      {
+        goAgain = false;
+        throw new Exception("Bye, hope to see you again.");
+      }
+      if (mainMenuChoice == "R")
+      {
+        while (true)
         {
-          proceed = NewEntryDisclaimer();
-
-			if (proceed)
-			{
-				// TODO: uncomment the following and call the EnterSalesEntries method below
-				count = EnterSalesEntries(sales, dates);
-				Console.WriteLine();
-				Console.WriteLine($"Entries completed. {count} records in temporary memory.");
-				Console.WriteLine();
-			}
-			else
-			{
-				Console.WriteLine("Cancelling new data entry. Returning to MAIN MENU.");
-			}
+          if (logicalSize == 0)
+					  throw new Exception("No entries loaded. Please load a file into memory");
+          DisplayAnalysisMenu();
+          string analysisMenuChoice = Prompt("\nEnter an Analysis Menu Choice: ").ToUpper();
+          if (analysisMenuChoice == "A")
+            FindAverageOfValuesInMemory(values, logicalSize);
+          if (analysisMenuChoice == "H")
+            FindHighestValueInMemory(values, logicalSize);
+          if (analysisMenuChoice == "L")
+            FindLowestValueInMemory(values, logicalSize);
+          if (analysisMenuChoice == "G")
+            GraphValuesInMemory(dates, values, logicalSize);
+          if (analysisMenuChoice == "R")
+            throw new Exception("Returning to Main Menu");
         }
-        else if (mainMenuChoice == "S")
-         {
-            if (count == 0)
-            {
-              Console.WriteLine("Sorry, LOAD data or enter NEW data before SAVING.");
-            }
-            else
-            {
-              proceed = SaveEntryDisclaimer();
-
-              if (proceed)
-              {
-                filename = PromptForFilename();
-                SaveSalesFile(filename, sales, dates);
-
-              }
-              else
-              {
-                Console.WriteLine("Cancelling save operation. Returning to MAIN MENU.");
-              }
-            }
-         }
-        else if (mainMenuChoice == "E")
-         {
-            Console.WriteLine("You picked E");
-              }
-        else if (mainMenuChoice == "L")
-         {
-            Console.WriteLine("You picked L");
-              }            
-        else if (mainMenuChoice == "V")
-         {
-            Console.WriteLine("You picked V");
-              }      
-        else if (mainMenuChoice == "M")
-            {
-            displayAnalysisMenu = true;
-            while (displayAnalysisMenu)
-                {
-                    try {
-                        DisplayAnalysisMenu();
-                            analysisMenuChoice = Prompt("Enter ANALYSIS sub-menu option: ").ToUpper();
-                            Console.WriteLine();
-                        if (analysisMenuChoice == "A")
-                        {
-                            Console.WriteLine("You picked A");
-                             }
-                        else if (analysisMenuChoice == "H")
-                        {
-                            Console.WriteLine("You picked H");
-                             }
-                        else if (analysisMenuChoice == "L")
-                        {
-                            Console.WriteLine("You picked L");
-                             }
-                        else if (analysisMenuChoice == "G")
-                        
-                        {
-                            Console.WriteLine("You picked G");
-                             }
-                        else if (analysisMenuChoice == "R")
-                        {
-                            displayAnalysisMenu = false;
-                             }
-                        else
-                        {
-                            Console.WriteLine("Invalid option. Please enter a valid option.");
-                             }
-                            } catch (Exception ex)
-                                {
-                                    Console.WriteLine($"{ex.Message}");
-                                }
-                }
-            }
-        else if (mainMenuChoice == "D")
-         {
-            DisplayMainMenu();
-              }
-        else if (mainMenuChoice == "Q")
-        {
-            quit = Prompt("Are you sure you want to quit (y/N)? ").ToLower().Equals("y");
-            Console.WriteLine();
-            if (quit)
-            {
-                displayMainMenu = false;
-            }
-
-        }
-        else
-        {
-            Console.WriteLine("Invalid option. Please enter a valid option.");
-        }
+      }
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"{ex.Message}");
+      Console.WriteLine($"{ex.Message}");
     }
-}
+  }
 
 void DisplayMainMenu()
 {
-    Console.WriteLine("====== Menu Options ======");
-    Console.WriteLine("  [N]ew Daily Sales Entry      ");
-    Console.WriteLine("  [S]ave Entries to File       ");
-    Console.WriteLine("  [E]dit Sales Entries       ");
-    Console.WriteLine("  [L]oad Sales File            ");
-    Console.WriteLine("  [V]iew Entered/Loaded Sales  ");
-    Console.WriteLine("  [M]onthly Statistics         ");
-    Console.WriteLine("  [D]isplay Main Menu          ");
-    Console.WriteLine("  [Q]uit Program               ");
-    Console.WriteLine("                               ");
+	Console.WriteLine("\nMain Menu");
+	Console.WriteLine("L) Load Values from File to Memory");
+	Console.WriteLine("S) Save Values from Memory to File");
+	Console.WriteLine("D) Display Values in Memory");
+	Console.WriteLine("A) Add Value in Memory");
+	Console.WriteLine("E) Edit Value in Memory");
+	Console.WriteLine("R) Analysis Menu");
+	Console.WriteLine("Q) Quit");
 }
 
 void DisplayAnalysisMenu()
 {
-    Console.WriteLine("====== Menu Options ======");
-    Console.WriteLine("  [A]verage Sales      ");
-    Console.WriteLine("  [H]ighest Sales       ");
-    Console.WriteLine("  [L]owest Sales           ");
-    Console.WriteLine("  [G]raph Sales  ");
-    Console.WriteLine("  [R]eturn to MAIN MENU         ");
+	Console.WriteLine("\nAnalysis Menu");
+	Console.WriteLine("A) Find Average of Values in Memory");
+	Console.WriteLine("H) Find Highest Value in Memory");
+	Console.WriteLine("L) Find Lowest Value in Memory");
+	Console.WriteLine("G) Graph Values in Memory");
+	Console.WriteLine("R) Return to Main Menu");
 }
 
-void DisplayProgramIntro()
+string Prompt(string prompt)
 {
-    Console.WriteLine("========================================");
-    Console.WriteLine("=                                      =");
-    Console.WriteLine("=            Monthly  Sales            =");
-    Console.WriteLine("=                                      =");
-    Console.WriteLine("========================================");
+  string response = "";
+  Console.Write(prompt);
+  response = Console.ReadLine();
+  return response;
 }
 
-
-
-static bool NewEntryDisclaimer()
+string GetFileName()
 {
-	bool response;
-	Console.WriteLine("Disclaimer: proceeding will overwrite all unsaved data.");
-	Console.WriteLine("Hint: Select EDIT from the main menu instead, to change individual days.");
-	Console.WriteLine("Hint: You'll need to enter data for the whole month.");
-	Console.WriteLine();
-	response = Prompt("Do you wish to proceed anyway? (y/N) ").ToLower().Equals("y");
-	Console.WriteLine();
-	return response;
-}
-
-static bool SaveEntryDisclaimer()
-{
-	bool response;
-	Console.WriteLine("Disclaimer: saving to an EXISTING file will overwrite data currently on that file.");
-	Console.WriteLine("Hint: Files will be saved to this program's directory by default.");
-	Console.WriteLine("Hint: If the file does not yet exist, it will be created.");
-	Console.WriteLine();
-	response = Prompt("Do you wish to proceed anyway? (y/N) ").ToLower().Equals("y");
-	Console.WriteLine();
-	return response;
-}
-
-int EnterSalesEntries(double[] sales, string[] dates) 
-{
-     Console.WriteLine("Enter daily sales entries for the month:");
-    for (int i = 0; i < sales.Length; i++)
-    {
-        Console.WriteLine($"Day {i + 1}:");
-        sales[i] = PromptDouble("Enter sales amount: ");
-        dates[i] = Prompt($"Enter date for day {i + 1}:  ");
-    }
-    return sales.Length;
-}
-
-void SaveSalesFile(string filename, double[] sales, string[] dates)
-{
-    
-    string[] csvLines = new string[salesdateMax];
-    csvLines[0] = "Data, Amount";
-    for (int n = 1; n < sales.Length; n++)
-    {
-      csvLines[n] = $"{sales[n]} + {dates[n]}";
-    }
-    File.WriteAllLines(filename, csvLines);
-    Console.WriteLine($"Data successfully written to file at: {Path.GetFullPath(filename)}");
-}
-
-static string Prompt(string prompt)
-{   
-    string response = "";
-    Console.Write(prompt);
-    return Console.ReadLine();
-}
-
-static double PromptDouble(String msg)
-{
-  bool inValidInput = true;
-  double numDouble = 0;
-  while (inValidInput)
-  {
-    try
-    {
-      Console.Write(msg);
-      numDouble = double.Parse(Console.ReadLine());
-      inValidInput = false; 
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"Invalid: {ex.Message}");
-    }
-  }
-  return numDouble;
-}
-
-static int PromptInt(String msg)
-{
-  bool inValidInput = true;
-  int numInt = 0;
-  while (inValidInput)
-  {
-    try
-    {
-      Console.Write(msg);
-      numInt = int.Parse(Console.ReadLine());
-      if (numInt < 0)
-        throw new Exception("Must be bigger than zero.");
-      inValidInput = false; 
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"Invalid: {ex.Message}");
-    }
-  }
-  return numInt;
-}
-
-
-
-void createFile()
-{
-   try
-  {
-    const string fileName = "Sample.dat"; 
-    string[] csvLines = new string[salesdateMax];
-    csvLines[0] = "Data, Amount";
-    File.WriteAllLines(fileName, csvLines);
-    Console.WriteLine($"Data successfully written to file at: {Path.GetFullPath(fileName)}");
-  }
-  catch (Exception ex)
-  {
-    Console.WriteLine($"Exception in demo1: {ex.Message}");
-  }
-}
-
-string PromptForFilename()
-{
-	bool isValidFilename = true;
-	const string CsvFileExtension = ".csv";
-	const string TxtFileExtension = ".txt";
-
+	string fileName = "";
 	do
 	{
-		filename = Prompt("Enter name of .csv or .txt file to save to (e.g. JAN-2024-sales.csv): ");
-		if (filename == "")
-		{
-			isValidFilename = false;
-			Console.WriteLine("Please try again. The filename cannot be blank or just spaces.");
-		}
-		else
-		{
-			if (!filename.EndsWith(CsvFileExtension) && !filename.EndsWith(TxtFileExtension)) //if filename does not end with .txt or .csv.
-			{
-				filename = filename + CsvFileExtension; //append .csv to filename
-				Console.WriteLine("It looks like your filename does not end in .csv or .txt, so it will be treated as a .csv file.");
-				isValidFilename = true;
-			}
-			else
-			{
-				Console.WriteLine("It looks like your filename ends in .csv or .txt, which is good!");
-				isValidFilename = true;
-			}
-		}
-	} while (!isValidFilename);
-	return filename;
+		fileName = Prompt("Enter file name including .csv or .txt: ");
+	} while (string.IsNullOrWhiteSpace(fileName));
+	return fileName;
 }
 
+int LoadFileValuesToMemory(string[] dates, double[] values)
+{
+	string fileName = GetFileName();
+	int logicalSize = 0;
+	string filePath = $"./data/{fileName}";
+	if (!File.Exists(filePath))
+		throw new Exception($"The file {fileName} does not exist.");
+	string[] csvFileInput = File.ReadAllLines(filePath);
+	for(int i = 0; i < csvFileInput.Length; i++)
+	{
+		Console.WriteLine($"lineIndex: {i}; line: {csvFileInput[i]}");
+		string[] items = csvFileInput[i].Split(',');
+		for(int j = 0; j < items.Length; j++)
+		{
+			Console.WriteLine($"itemIndex: {j}; item: {items[j]}");
+		}
+		if(i != 0)
+		{
+		dates[logicalSize] = items[0];
+    values[logicalSize] = double.Parse(items[1]);
+    logicalSize++;
+		}
+	}
+  Console.WriteLine($"Load complete. {fileName} has {logicalSize} data entries");
+	return logicalSize;
+}
 
+void DisplayMemoryValues(string[] dates, double[] values, int logicalSize)
+{
+	if(logicalSize == 0)
+		throw new Exception($"No Entries loaded. Please load a file to memory or add a value in memory");
+	Console.WriteLine($"\nCurrent Loaded Entries: {logicalSize}");
+	Console.WriteLine($"   Date     Value");
+	for (int i = 0; i < logicalSize; i++)
+		Console.WriteLine($"{dates[i]}   {values[i]}");
+}
 
+double FindHighestValueInMemory(double[] values, int logicalSize)
+{
+    double highest = values[0];
+	  for (int i = 1; i < logicalSize; i++)
+  {
+        if (values[i] > highest)
 
+        {
+            highest = values[i];
+        }
 
+  }
+    Console.WriteLine($"\nHighest value is {highest}");
+    return highest;
+}
+
+double FindLowestValueInMemory(double[] values, int logicalSize)
+{
+	double lowest = values[0]; 
+
+    for (int i = 1; i < logicalSize; i++)
+    {
+        if (values[i] < lowest)
+        {
+            lowest = values[i];
+        }
+    }
+
+    Console.WriteLine($"The lowest value in memory is: {lowest}");
+    return lowest;
+}
+
+void FindAverageOfValuesInMemory(double[] values, int logicalSize)
+{
+
+  double sum = 0;
+
+  for (int i = 0; i < logicalSize; i++)
+    {
+        sum += values[i];
+    }
+  
+  double average = sum / logicalSize;
+	
+   Console.WriteLine($"The average value in memory is: {average}");
+}
+
+void SaveMemoryValuesToFile(string[] dates, double[] values, int logicalSize)
+{
+	Console.WriteLine("Not Implemented Yet");
+	//TODO: Replace this code with yours to implement this function.
+}
+
+int AddMemoryValues(string[] dates, double[] values, int logicalSize)
+{
+	Console.WriteLine("Not Implemented Yet");
+	return 0;
+	//TODO: Replace this code with yours to implement this function.
+}
+
+void EditMemoryValues(string[] dates, double[] values, int logicalSize)
+{
+	Console.WriteLine("Not Implemented Yet");
+	//TODO: Replace this code with yours to implement this function.
+}
+
+void GraphValuesInMemory(string[] dates, double[] values, int logicalSize)
+{
+	Console.WriteLine("Not Implemented Yet");
+	//TODO: Replace this code with yours to implement this function.
+}
