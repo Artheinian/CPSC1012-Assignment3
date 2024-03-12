@@ -92,11 +92,11 @@ string Prompt(string prompt)
   return response;
 }
 
-string PromptDate(string prompt)
-{
-  bool inValidInput = true;
-  DateTime date = DateTime.Today;
-}
+// string PromptDate(string prompt)
+// {
+//   bool inValidInput = true;
+//   DateTime date = DateTime.Today;
+// }
 string GetFileName()
 {
 	string fileName = "";
@@ -206,9 +206,45 @@ int AddMemoryValues(string[] dates, double[] values, int logicalSize)
 
 void EditMemoryValues(string[] dates, double[] values, int logicalSize)
 {
-	Console.WriteLine("Not Implemented Yet");
-	//TODO: Replace this code with yours to implement this function.
-}
+	try{
+    string fileName = GetFileName();
+	string filePath = $"./data/{fileName}";
+	if (!File.Exists(filePath))
+		throw new Exception($"The file {fileName} does not exist.");
+	string[] csvFileInput = File.ReadAllLines(filePath);
+	for(int i = 0; i < csvFileInput.Length; i++)
+  {
+  Console.WriteLine($"lineIndex: {i}; line: {csvFileInput[i]}");
+  }
+
+    
+  Console.Write("\nEnter the date (format: MM-dd-) to edit: ");
+        string dateToEdit = Console.ReadLine();
+
+        // Find the index of the date in the dates array
+        int index = Array.IndexOf(dates, dateToEdit);
+
+        if (index != -1)
+        {
+            // Prompt the user to enter the new value
+            Console.Write("Enter the new value: ");
+            double newValue = double.Parse(Console.ReadLine());
+
+            // Update the corresponding value in the values array
+            values[index] = newValue;
+
+            Console.WriteLine($"Value for date {dateToEdit} updated successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Date not found.");
+        }
+  } catch (Exception ex)
+    {
+    Console.WriteLine(ex.Message);
+    }
+  }
+
 
 void GraphValuesInMemory(string[] dates, double[] values, int logicalSize)
 {
