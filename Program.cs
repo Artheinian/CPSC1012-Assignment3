@@ -92,6 +92,11 @@ string Prompt(string prompt)
   return response;
 }
 
+string PromptDate(string prompt)
+{
+  bool inValidInput = true;
+  DateTime date = DateTime.Today;
+}
 string GetFileName()
 {
 	string fileName = "";
