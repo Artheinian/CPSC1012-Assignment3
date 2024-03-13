@@ -200,10 +200,12 @@ void SaveMemoryValuesToFile(string[] dates, double[] values, int logicalSize)
 }
 
 string PromptDate(string promptdate){
+  bool inValidDate = true;
   string response = "";
   try {
     Console.WriteLine(promptdate);
     response = Console.ReadLine();
+    inValidDate = false;
   }catch (Exception ex)
   {
     Console.WriteLine(ex.Message);
@@ -241,8 +243,12 @@ int AddMemoryValues(string[] dates, double[] values, int logicalSize)
   dateString = PromptDate("Enter date format mm-dd-yyyy (e.g 11-23-2023): " );
   bool found = false;
   for(int i =0; i < logicalSize; i++)
+  {
     if (dates[i].Equals(dateString))
+    {
         found = true;
+    }
+  }
   if (found = true)
     throw new Exception($"{dateString} is already in memory. Edit entry instead");
   value = PromptDoubleBetweenMinMax($"Enter a double value between {minSize} , {maxSize}  ", minSize , maxSize);
