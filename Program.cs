@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+using System.Text.RegularExpressions;
 // TODO: declare a constant to represent the max size of the values
 // and dates arrays. The arrays must be large enough to store
 // values for an entire month.
@@ -29,7 +30,15 @@ bool goAgain = true;
       if (mainMenuChoice == "D")
         DisplayMemoryValues(dates, values, logicalSize);
       if (mainMenuChoice == "A")
+      {
+        if (logicalSize == 0)
+          {
+            Console.WriteLine("Sorry, Load your data first ");
+          }
+        else {
         logicalSize = AddMemoryValues(dates, values, logicalSize);
+        }
+      }
       if (mainMenuChoice == "E")
         EditMemoryValues(dates, values, logicalSize);
       if (mainMenuChoice == "Q")
@@ -202,10 +211,16 @@ void SaveMemoryValuesToFile(string[] dates, double[] values, int logicalSize)
 string PromptDate(string promptdate){
   bool inValidDate = true;
   string response = "";
+  while(inValidDate)
   try {
     Console.WriteLine(promptdate);
     response = Console.ReadLine();
+
+              
+    DateTime date = DateTime.ParseExact(response, "MM-dd-yyyy", null);
+    
     inValidDate = false;
+
   }catch (Exception ex)
   {
     Console.WriteLine(ex.Message);
@@ -249,12 +264,13 @@ int AddMemoryValues(string[] dates, double[] values, int logicalSize)
         found = true;
     }
   }
-  if (found = true)
+  if (found == true)
     throw new Exception($"{dateString} is already in memory. Edit entry instead");
   value = PromptDoubleBetweenMinMax($"Enter a double value between {minSize} , {maxSize}  ", minSize , maxSize);
   dates[logicalSize] = dateString;
   values[logicalSize] = value;
   logicalSize++;
+  Console.WriteLine($"Value {value} has been added to the Date {dateString}");
   return logicalSize;
 }
 
