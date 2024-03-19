@@ -254,7 +254,7 @@ int AddMemoryValues(string[] dates, double[] values, int logicalSize)
 	double value = 0.0;
   string dateString = "";
   double minSize = 0.0;
-  double maxSize = 1000.0;
+  double maxSize = 10.0;
   dateString = PromptDate("Enter date format mm-dd-yyyy (e.g 11-23-2023): " );
   bool found = false;
   for(int i =0; i < logicalSize; i++)
@@ -280,7 +280,7 @@ void EditMemoryValues(string[] dates, double[] values, int logicalSize)
   string dateString = "";
   int indexFound = 0;
   double minSize = 0.0;
-  double maxSize = 1000.0;
+  double maxSize = 10.0;
 
     if(logicalSize == 0)
       throw new Exception($"No Entries loaded. Please add a value into memory or load file into memory");
@@ -303,6 +303,27 @@ void EditMemoryValues(string[] dates, double[] values, int logicalSize)
 
 void GraphValuesInMemory(string[] dates, double[] values, int logicalSize)
 {
+    double minValue = 0;
+    double yAxisMaxValue = FindHighestValueInMemory(values, logicalSize);
+    double yAxisSubract = 1;
+    for (double row = yAxisMaxValue; row >= minValue; row -= yAxisSubract)
+    {
+        Console.Write($"\n{row:c0} |");
+    }
+    Console.WriteLine("");
+    string lines = "---";
+    int date = 0;
+            for (int col = 0; col < physicalSize; col++)
+        {
+            lines += "---";
+            date += col;
+        //     for (int j = 0; j < logicalSize; j++)
+        //     {
+        //         string template = dates[j].Substring(3,2);
+        //     }
+        }
+        Console.WriteLine($"{lines}");
+        Console.WriteLine($" {date}", 00);
 
 // for(int row = yAxisInMaxValue; row >= minValue; row-=yAxisInMaxValue)
 //     {
@@ -316,6 +337,5 @@ void GraphValuesInMemory(string[] dates, double[] values, int logicalSize)
 //                 }
 //             }
 //     }
-	Console.WriteLine("Not Implemented Yet");
-	//TODO: Replace this code with yours to implement this function.
+
 }
