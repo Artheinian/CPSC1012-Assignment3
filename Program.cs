@@ -192,19 +192,19 @@ void FindAverageOfValuesInMemory(double[] values, int logicalSize)
 
 void SaveMemoryValuesToFile(string[] dates, double[] values, int logicalSize)
 {
-  string folderPath = @"F:\CPSC1012\Github\CPSC1012-Assignment3\data";
+
   string filename = GetFileName();
 
-  string fullPath = folderPath + "\\" + filename;
+  string filePath = $"data/{filename}";
 
 	string[] csvLines = new string[logicalSize + 1];
-  csvLines[0] = "New Dates, New Values";
+  csvLines[0] = "Dates, Values";
   for (int n = 0; n < logicalSize; n++)
   {
     csvLines[n + 1] = $"{dates[n]}, {values[n]}";
   }
-  File.AppendAllLines(fullPath, csvLines);
-  Console.WriteLine($"Data successfully written to file at: {fullPath}");
+  File.AppendAllLines(filePath, csvLines);
+  Console.WriteLine($"Data successfully written to file at: {filePath}");
 
 }
 
