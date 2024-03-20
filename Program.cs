@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 // values for an entire month.
 using System.Text;
 
+double maxDataSize = 100;
+
 int physicalSize = 31;
 int logicalSize = 0;
 
@@ -303,27 +305,72 @@ void EditMemoryValues(string[] dates, double[] values, int logicalSize)
 
 void GraphValuesInMemory(string[] dates, double[] values, int logicalSize)
 {
-    double minValue = 0;
-    double yAxisMaxValue = FindHighestValueInMemory(values, logicalSize);
-    double yAxisSubract = 1;
-    for (double row = yAxisMaxValue; row >= minValue; row -= yAxisSubract)
-    {
-        Console.Write($"\n{row:c0} |");
-    }
-    Console.WriteLine("");
-    string lines = "---";
-    int date = 0;
-            for (int col = 0; col < physicalSize; col++)
-        {
-            lines += "---";
-            date += col;
-        //     for (int j = 0; j < logicalSize; j++)
-        //     {
-        //         string template = dates[j].Substring(3,2);
-        //     }
+  Console.WriteLine($"=== Sales of the month of {fileName} ===");
+  Console.WriteLine($"Dollars");
+  Array.Sort(dates, salesAmnt,0, dataSize);
+
+  int dollars = 100;
+  string perLine = "";
+
+  while(dollars >= 0 ) {
+    Console.Write($"{dollars, 4}|");
+    string[] salesDay = dates[0].Split('-');
+
+    for(int i = 1; i <= maxDataSize; i++) {
+      string formatDay = i.ToString("00");
+      int dayIndex = Array.IndexOf(dates, $"{salesDay[0]}-{formatDay}-{salesDay[2]}"); 
+
+      if(dayIndex != -1) {
+        if(salesAmnt[dayIndex] >= dollars && salesAmnt[dayIndex] <= (dollars + 9)) {
+          perLine += $"{salesAmnt[dayIndex], 3}";
+        } else {
+          perLine += $"{' ', 3}";
         }
-        Console.WriteLine($"{lines}");
-        Console.WriteLine($" {date}", 00);
+      } else {
+        perLine += $"{' ', 3}";
+      }
+    }
+    Console.WriteLine($"{perLine}");
+    perLine = "";
+    dollars -= 10;
+  }
+
+  string line = "-----";
+  string days = "";
+
+  for(int i = 1; i <= maxDataSize; i++) {
+    string formatDay = i.ToString("00");
+    line += "---";
+    days += $"{formatDay, 3}";
+  }
+
+  Console.WriteLine($"{line}");
+  Console.Write($"Date|");
+  Console.Write($"{days}");
+
+  Console.WriteLine($"\n");
+}
+    // double minValue = 0;
+    // double yAxisMaxValue = FindHighestValueInMemory(values, logicalSize);
+    // double yAxisSubract = 1;
+    // for (double row = yAxisMaxValue; row >= minValue; row -= yAxisSubract)
+    // {
+    //     Console.Write($"\n{row:c0} |");
+    // }
+    // Console.WriteLine("");
+    // string lines = "---";
+    // int date = 0;
+    //         for (int col = 0; col < physicalSize; col++)
+    //     {
+    //         lines += "---";
+    //         date += col;
+    //     //     for (int j = 0; j < logicalSize; j++)
+    //     //     {
+    //     //         string template = dates[j].Substring(3,2);
+    //     //     }
+    //     }
+    //     Console.WriteLine($"{lines}");
+    //     Console.WriteLine($" {date}", 00);
 
 // for(int row = yAxisInMaxValue; row >= minValue; row-=yAxisInMaxValue)
 //     {
@@ -338,4 +385,3 @@ void GraphValuesInMemory(string[] dates, double[] values, int logicalSize)
 //             }
 //     }
 
-}
