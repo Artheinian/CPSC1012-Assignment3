@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 // values for an entire month.
 using System.Text;
 
-double maxDataSize = 100;
 
 int physicalSize = 31;
 int logicalSize = 0;
@@ -198,6 +197,10 @@ void SaveMemoryValuesToFile(string[] dates, double[] values, int logicalSize)
   string filename = GetFileName();
 
   string filePath = $"data/{filename}";
+ if(logicalSize == 0)
+      throw new Exception($"No Entries loaded. Please add or load a value into memory or load file into memory");
+    if(logicalSize > 1)
+    Array.Sort(dates, values,0, logicalSize);
 
 	string[] csvLines = new string[logicalSize + 1];
   csvLines[0] = "Dates, Values";
@@ -205,8 +208,8 @@ void SaveMemoryValuesToFile(string[] dates, double[] values, int logicalSize)
   {
     csvLines[n + 1] = $"{dates[n]}, {values[n]}";
   }
-  File.AppendAllLines(filePath, csvLines);
-  Console.WriteLine($"Data successfully written to file at: {filePath}");
+  File.WriteAllLines(filePath, csvLines);
+  Console.WriteLine($"Data successfully saved to file at: {filePath}");
 
 }
 
@@ -303,85 +306,118 @@ void EditMemoryValues(string[] dates, double[] values, int logicalSize)
 }
 
 
+
+
 void GraphValuesInMemory(string[] dates, double[] values, int logicalSize)
 {
-  Console.WriteLine($"=== Sales of the month of {fileName} ===");
-  Console.WriteLine($"Dollars");
-  Array.Sort(dates, salesAmnt,0, dataSize);
+    string fileName = GetFileName();
 
-  int dollars = 100;
-  string perLine = "";
+    Console.WriteLine($"=== Sales of the month of {fileName} ===");
+    Console.WriteLine($"Dollars");
+    Array.Sort(dates, values, 0, logicalSize);
 
-  while(dollars >= 0 ) {
-    Console.Write($"{dollars, 4}|");
-    string[] salesDay = dates[0].Split('-');
+    int dollars = 100;
+    string perLine = "";
 
-    for(int i = 1; i <= maxDataSize; i++) {
-      string formatDay = i.ToString("00");
-      int dayIndex = Array.IndexOf(dates, $"{salesDay[0]}-{formatDay}-{salesDay[2]}"); 
+    while (dollars >= 0)
+    {
+        Console.Write($"{dollars, 4}|");
 
-      if(dayIndex != -1) {
-        if(salesAmnt[dayIndex] >= dollars && salesAmnt[dayIndex] <= (dollars + 9)) {
-          perLine += $"{salesAmnt[dayIndex], 3}";
-        } else {
-          perLine += $"{' ', 3}";
+        for (int i = 1; i <= physicalSize; i++)
+        {
+            string formatDay = i.ToString("00");
+            bool foundDay = false;
+
+            for (int j = 0; j < logicalSize; j++)
+            {
+                string[] salesDay = dates[j].Split('-');
+
+                if (salesDay[1] == formatDay)
+                {
+                    foundDay = true;
+                    if (values[j] >= dollars && values[j] <= (dollars + 9))
+                    {
+                        perLine += $"{values[j], 3}";
+                    }
+                    else
+                    {
+                        perLine += $"{' ', 3}";
+                    }
+                }
+            }
+
+            if (!foundDay)
+            {
+                perLine += $"{' ', 3}";
+            }
         }
-      } else {
-        perLine += $"{' ', 3}";
-      }
+        Console.WriteLine($"{perLine}");
+        perLine = "";
+        dollars -= 10;
     }
-    Console.WriteLine($"{perLine}");
-    perLine = "";
-    dollars -= 10;
-  }
 
-  string line = "-----";
-  string days = "";
+    string line = "-----";
+    string days = "";
 
-  for(int i = 1; i <= maxDataSize; i++) {
-    string formatDay = i.ToString("00");
-    line += "---";
-    days += $"{formatDay, 3}";
-  }
+    for (int i = 1; i <= physicalSize; i++)
+    {
+        string formatDay = i.ToString("00");
+        line += "---";
+        days += $"{formatDay, 3}";
+    }
 
-  Console.WriteLine($"{line}");
-  Console.Write($"Date|");
-  Console.Write($"{days}");
+    Console.WriteLine($"{line}");
+    Console.Write($"Date|");
+    Console.Write($"{days}");
 
-  Console.WriteLine($"\n");
+    Console.WriteLine($"\n");
 }
-    // double minValue = 0;
-    // double yAxisMaxValue = FindHighestValueInMemory(values, logicalSize);
-    // double yAxisSubract = 1;
-    // for (double row = yAxisMaxValue; row >= minValue; row -= yAxisSubract)
-    // {
-    //     Console.Write($"\n{row:c0} |");
-    // }
-    // Console.WriteLine("");
-    // string lines = "---";
-    // int date = 0;
-    //         for (int col = 0; col < physicalSize; col++)
-    //     {
-    //         lines += "---";
-    //         date += col;
-    //     //     for (int j = 0; j < logicalSize; j++)
-    //     //     {
-    //     //         string template = dates[j].Substring(3,2);
-    //     //     }
-    //     }
-    //     Console.WriteLine($"{lines}");
-    //     Console.WriteLine($" {date}", 00);
+// void GraphValuesInMemory(string[] dates, double[] values, int logicalSize)
+// {
+//   string fileName = GetFileName();
+  
+//   Console.WriteLine($"=== Sales of the month of {fileName} ===");
+//   Console.WriteLine($"Dollars");
+//   Array.Sort(dates, values,0, logicalSize);
 
-// for(int row = yAxisInMaxValue; row >= minValue; row-=yAxisInMaxValue)
-//     {
-//         Console.Write($"\n{row,yAxisWidth:c0} | ");
-//         for (int col = 0; col < physicalSize; col++)
-//             {
-//                 for(int j = 0; j logicalSize; j ++)
-//                 {
-//                     string tempDate = dates[j].Substring(3,2);
-//                     if (tempDate Substring(0,1) == 0)
-//                 }
-//             }
+//   int dollars = 100;
+//   string perLine = "";
+
+//   while(dollars >= 0 ) {
+//     Console.Write($"{dollars, 4}|");
+//     string[] salesDay = dates[0].Split('-');
+
+//     for(int i = 1; i <= physicalSize; i++) {
+//       string formatDay = i.ToString("00");
+//       int dayIndex = Array.IndexOf(dates, $"{salesDay[0]}-{formatDay}-{salesDay[2]}"); 
+
+//       if(dayIndex != -1) {
+//         if(values[dayIndex] >= dollars && values[dayIndex] <= (dollars + 9)) {
+//           perLine += $"{values[dayIndex], 3}";
+//         } else {
+//           perLine += $"{' ', 3}";
+//         }
+//       } else {
+//         perLine += $"{' ', 3}";
+//       }
 //     }
+//     Console.WriteLine($"{perLine}");
+//     perLine = "";
+//     dollars -= 10;
+//   }
 
+//   string line = "-----";
+//   string days = "";
+
+//   for(int i = 1; i <= physicalSize; i++) {
+//     string formatDay = i.ToString("00");
+//     line += "---";
+//     days += $"{formatDay, 3}";
+//   }
+
+//   Console.WriteLine($"{line}");
+//   Console.Write($"Date|");
+//   Console.Write($"{days}");
+
+//   Console.WriteLine($"\n");
+// }
